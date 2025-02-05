@@ -1,0 +1,17 @@
+# Ignore PyCharm project files
+.idea/
+*.iml
+
+# Ignore Python-specific files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore log and temporary files
+*.log
+.DS_Store
