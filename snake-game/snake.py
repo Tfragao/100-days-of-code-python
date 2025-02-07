@@ -6,7 +6,7 @@ UP = 90
 DOWN = 270
 LEFT = 180
 RIGHT = 0
-
+GO_OFF_SCREEN = 1000 # This is just to make the snake disappears from the playing screen.
 segments = []
 
 class Snake:
@@ -27,6 +27,13 @@ class Snake:
         new_segment.penup()
         new_segment.goto(position)
         self.segments.append(new_segment)
+
+    def reset(self):
+        for seg in self.segments:
+            seg.goto(GO_OFF_SCREEN, GO_OFF_SCREEN)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
 
     def extend_snake(self):
         self.add_segment(self.segments[-1].position())
