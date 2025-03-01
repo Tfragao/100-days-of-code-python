@@ -3,24 +3,26 @@ import pandas as pd
 import random
 
 BACKGROUND_COLOR = "#B1DDC6"
+FLIP_CARD_TIME = 3000
 
 # ---------------------------- Creating new flash cards ------------------------------- #
-def generate_french_word():
-    df = pd.read_csv("data/french_words.csv")
-    # Convert the DataFrame to a dictionary (French as keys, English as values)
-    word_dict = df.set_index("French")["English"].to_dict()
-    french_word = random.choice(list(word_dict.keys()))
-    #Update text and title on the canvas
-    canvas.itemconfig(word_text, text=french_word)
-    canvas.itemconfig(title_text, text="French")
-
 data = pd.read_csv("data/french_words.csv")
 to_learn = data.to_dict(orient="records")
+current_card = {}
 
 def next_card():
+    global current_card, flip_timer
+    window.after_cancel(flip_timer)
     current_card = random.choice(to_learn)
-    canvas.itemconfig(title_text, text="French")
-    canvas.itemconfig(word_text, text=current_card["French"])
+    canvas.itemconfig(title_text, text="French", fill="black")
+    canvas.itemconfig(word_text, text=current_card["French"], fill="black")
+    canvas.itemconfig(canvas_image, image=card_front)
+    flip_timer = window.after(FLIP_CARD_TIME, func=flip_card)
+
+def flip_card():
+    canvas.itemconfig(title_text, text="English", fill="white")
+    canvas.itemconfig(word_text, text=current_card["English"], fill="white")
+    canvas.itemconfig(canvas_image, image=card_back)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -28,16 +30,16 @@ window = Tk()
 window.title("Flash Card")
 window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
 
+#After 3 seconds change image
+flip_timer = window.after(FLIP_CARD_TIME, func=flip_card)
+
 canvas = Canvas(width=800, height=526)
-card_front = PhotoImage(file="images/card_front.png")
-canvas.create_image(400, 263, image=card_front)
+card_front =  PhotoImage(file="images/card_front.png")
+card_back  =  PhotoImage(file="images/card_back.png")
+
+canvas_image = canvas.create_image(400, 263, image=card_front)
 canvas.config(bg=BACKGROUND_COLOR, highlightthickness=0)
 canvas.grid(row=0, column=0, columnspan=2)
-
-#title_label = Label(text="Title", font=("Arial", 40, "italic"), bg="white")
-#word_label = Label(text="Word", font=("Arial", 60, "bold"), bg="white")
-#canvas.create_window(400, 150, window=title_label)
-#canvas.create_window(400, 263, window=word_label)
 
 title_text = canvas.create_text(400,150, text="", font=("Arial", 40, "italic"))
 word_text= canvas.create_text(400,263, text="", font=("Arial", 60, "bold"))
