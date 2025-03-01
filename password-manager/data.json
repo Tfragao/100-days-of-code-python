@@ -1,10 +1,14 @@
 {
-    "Amazon": {
-        "email": "taison@email.com",
-        "password": "LrkRO4#+!9MiyG"
-    },
     "Google": {
         "email": "taison@email.com",
-        "password": "KLF19Dj&dc9$ASQ6"
+        "password": "Kd9XM!Ak*rT&Q3"
+    },
+    "Amazon": {
+        "email": "taison@email.com",
+        "password": "Jg$QAtT*K$9P!3z5"
+    },
+    "Tesla": {
+        "email": "taison@email.com",
+        "password": "M9ru8oVyy)U("
     }
 }
