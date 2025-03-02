@@ -1,22 +1,46 @@
-##################### Hard Starting Project ######################
+import smtplib
+import datetime as dt
+import pandas as pd
+import random
 
-# 1. Update the birthdays.csv with your friends & family's details. 
-# HINT: Make sure one of the entries matches today's date for testing purposes. 
+SENDER_EMAIL = "sender@email.com"     #This is a placeholder, not a real email.
+RECEIVER_EMAIL = "receiver@email.com" #This is a placeholder, not a real email.
+PASSWORD = "sender password"
+SUBJECT = "Happy Birthday!"
+name = ""
 
-# 2. Check if today matches a birthday in the birthdays.csv
-# HINT 1: Only the month and day matter. 
-# HINT 2: You could create a dictionary from birthdays.csv that looks like this:
-# birthdays_dict = {
-#     (month, day): data_row
-# }
-#HINT 3: Then you could compare and see if today's month/day matches one of the keys in birthday_dict like this:
-# if (today_month, today_day) in birthdays_dict:
+def send_birthday_wishes():
+    """Sends birthday wishes to a specific person."""
+    global name
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(user=SENDER_EMAIL, password=PASSWORD)
+        connection.sendmail(
+            from_addr=SENDER_EMAIL,
+            to_addrs= RECEIVER_EMAIL,
+            msg=f"Subject:{SUBJECT}\n\n{name}"
+        )
 
-# 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
-# HINT: https://www.w3schools.com/python/ref_string_replace.asp
+now = dt.datetime.now()
+today_day = now.weekday()
+today_month = now.month
 
-# 4. Send the letter generated in step 3 to that person's email address.
-# HINT: Gmail(smtp.gmail.com), Yahoo(smtp.mail.yahoo.com), Hotmail(smtp.live.com), Outlook(smtp-mail.outlook.com)
+try:
+    df = pd.read_csv("birthdays.csv")
+except FileNotFoundError:
+    print("Error: You should create a birthday csv file with data to be send.")
+else:
+    birthdays_dict = {(row["month"], row["day"]) : row.to_dict() for _, row in df.iterrows()}
+    if (today_month, today_day) in birthdays_dict:
+        try:
+            with open(f"letter_templates/letter_{random.randint(1, 3)}.txt") as file:
+                content = file.read()
+                name = content.replace("[NAME]", birthdays_dict[(today_month, today_day)]["name"])
+                send_birthday_wishes()
+        except FileNotFoundError:
+            print("Error: You should have a letter.txt file to send.")
+
+
 
 
 
