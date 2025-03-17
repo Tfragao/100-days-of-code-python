@@ -1,12 +1,14 @@
 import requests
+import os
 from twilio.rest import Client
 
-account_sid = "Your account sid here"
-auth_token = "your account token here"
+account_sid = os.environ.get("ACCOUNT_SID")
+auth_token = os.environ.get("AUTH_TOKEN")
 
 WEATHER_CONDITION = 700
 OPENWEATHER_ENDPOINT = "https://api.openweathermap.org/data/2.5/forecast"
-api_key = "your API Key here"
+api_key = os.environ.get("API_KEY")
+
 parameters = {
     "lat" : 43.2627,
     "lon" : -2.9253,
@@ -31,8 +33,7 @@ if will_rain:
     client = Client(account_sid, auth_token)
     message = client.messages.create(
         body="This is Taison here.It is going to rain today, remember to bring an umbrella ☔",
-        from_="Number you are sending from here",
-        to="Number you want to send to",
+        from_="your number here ",
+        to="number where you want to send",
 
     )
-    print(message.status)
