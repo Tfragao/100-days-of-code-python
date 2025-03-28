@@ -15,3 +15,5 @@ env/
 # Ignore log and temporary files
 *.log
 .DS_Store
+
+.env
